@@ -12,4 +12,4 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=None)
 
 
-bot.run('ODIzNTM2NzA2NDU1NzMyMjM0.YFiQUw.6RB8vzpHCGqNiGOvUsq-St5NZHA')
+bot.run('ODIzNTM2NzA2NDU1NzMyMjM0.YFiQUw.AX8a4Fme2d33hfopBQoNMQMicZU')
