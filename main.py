@@ -52,5 +52,4 @@ async def call_paper(ctx, *args):
         await ctx.send('ㄹㅇ ㅋㅋ')
 
 
-# bot.run(os.environ['token'])
-bot.run('ODIzNTM2NzA2NDU1NzMyMjM0.YFiQUw.swXWiHSw8zik-ISz2Y5JbzKf5Yo')
+bot.run(os.environ['token'])
