@@ -1,15 +1,13 @@
 import discord
 from discord.ext import commands
+import os
 
 bot = commands.Bot(command_prefix='!')
 
 
 @bot.event
 async def on_ready():
-    print('다음으로 로그인합니다: ')
-    print(bot.user.name)
-    print('connection was succesful')
     await bot.change_presence(status=discord.Status.online, activity=None)
+    print("봇 이름",bot.user.name,"봇아이디: ", bot.user.id, "봇 버전: ", discord.__version__)
 
-
-bot.run('ODIzNTM2NzA2NDU1NzMyMjM0.YFiQUw.AX8a4Fme2d33hfopBQoNMQMicZU')
+bot.run('os.environ['token'])
