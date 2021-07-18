@@ -1,4 +1,4 @@
-import discord, os, music, chat
+import discord, os, chat
 from discord.ext import commands
 bot = commands.Bot(command_prefix='!')
 

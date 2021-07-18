@@ -101,10 +101,6 @@ class Music(commands.Cog):
             ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
         await ctx.send(f'현재 재생중: {player.title}')
 
-    @commands.command(name='리스트')
-    async def show_player_list(self, ctx)
-
-
     @commands.command(name='일시정지')
     async def stop(self, ctx):
 
