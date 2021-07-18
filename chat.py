@@ -7,7 +7,7 @@ class Chat(commands.Cog):
         self.bot = bot
 
     @commands.command(name='페이퍼')
-    async def call_paper_kr(ctx, *args):
+    async def call_paper_kr(self, ctx, *args):
         str = ' '.join(args)
         if str == "ㅎㅇ":
             await ctx.send('ㅎㅇ')
