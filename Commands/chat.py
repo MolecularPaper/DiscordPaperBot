@@ -1,7 +1,4 @@
-import json
-
-import asyncio
-import discord
+import json, asyncio, discord, unique_reaction
 from discord.ext import commands
 
 
@@ -22,10 +19,7 @@ class Chat(commands.Cog):
 
     async def reaction(self, ctx, str):
         if str == '최진원':
-            m = await ctx.send('그는 안탑갑게도 탈모...')
-            await asyncio.sleep(0.5)
-            await m.delete()
-            await ctx.send('ㅇ?')
+            await unique_reaction.unique_reaction_1()
         else:
             await ctx.send(self.reaction_dic[str][0])
 
