@@ -26,10 +26,10 @@ class Chat(commands.Cog):
             if str == '정보' or str == 'Info':
                 await self.show_command_info(ctx)
             elif str == '알려주기':
-                await reaction.add_reaction(ctx, args)
+                await self.add_reaction(ctx, args)
             elif str == '기억삭제':
-                await reaction.delete_reaction(ctx, args)
+                await self.reaction.delete_reaction(ctx, args)
             else:
-                await reaction.reaction(ctx, str)
+                await self.reaction.reaction(ctx, str)
         except:
             await self.show_command_info(ctx)
