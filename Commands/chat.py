@@ -26,7 +26,7 @@ class Chat(commands.Cog):
             ctx.send('잘못 입력하였습니다!')
             return None
 
-        #알려준 문장 등록
+        # 알려준 문장 등록
         recation = temp.split(':')
         self.reaction_dic[recation[0].strip()] = (recation[1].strip(), ctx.message.author.name)
         with open('reaction_data.json', "w") as json_file:
