@@ -18,9 +18,7 @@ class Chat(commands.Cog):
         await ctx.send(embed=_embed)
 
     async def reaction(self, ctx, str):
-        if str == '최진원':
-            await unique_reaction.unique_reaction_1()
-        else:
+        if not unique_reaction.check_reaction(ctx, str):
             await ctx.send(self.reaction_dic[str][0])
 
     async def add_reaction(self, ctx, *args):
