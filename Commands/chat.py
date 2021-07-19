@@ -47,6 +47,7 @@ class Chat(commands.Cog):
         str = ' '.join(str_list)
 
         # 등록된 문장인자 확인후, 등록된 문장이면 제거후 확인 메세지 출력, 아니면 메세지 출력후 종료
+        print(self.reaction_dic[str][1] + ',' + ctx.message.author.name)
         if not(str in self.reaction_dic):
             await ctx.send('등록되있지 않은 문장입니다!')
         elif self.reaction_dic[str][1] != ctx.message.author.name:
