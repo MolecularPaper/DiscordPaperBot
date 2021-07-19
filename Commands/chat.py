@@ -1,5 +1,6 @@
 import json
 
+import asyncio
 import discord
 from discord.ext import commands
 
@@ -18,6 +19,15 @@ class Chat(commands.Cog):
                                                            '(입력자가 알려줬을경우만 삭제됨)',
                                color=0x00ff00)
         await ctx.send(embed=_embed)
+
+    async def reaction(self, ctx, str):
+        if str == '최진원':
+            m = await ctx.send('그는 안탑갑게도 탈모...')
+            await asyncio.sleep(0.5)
+            await m.delete()
+            await ctx.send('ㅇ?')
+        else:
+            await ctx.send(self.reaction_dic[str][0])
 
     async def add_reaction(self, ctx, *args):
         str_list = list(args[0])
@@ -46,9 +56,8 @@ class Chat(commands.Cog):
         del str_list[0]
         str = ' '.join(str_list)
 
-        # 등록된 문장인자 확인후, 등록된 문장이면 제거후 확인 메세지 출력, 아니면 메세지 출력후 종료
-        print(self.reaction_dic[str][1] + ',' + ctx.message.author.name)
-        if not(str in self.reaction_dic):
+        # 등록된 문장인지와 등록자가 본인인지 확인후, 맞으면 제거후 확인 메세지 출력, 아니면 메세지 출력후 종료
+        if not (str in self.reaction_dic):
             await ctx.send('등록되있지 않은 문장입니다!')
         elif self.reaction_dic[str][1] != ctx.message.author.name:
             await ctx.send('등록한 사람이 다릅니다!')
@@ -68,9 +77,10 @@ class Chat(commands.Cog):
                 await self.add_reaction(ctx, args)
             elif str == '기억삭제':
                 await self.delete_reaction(ctx, args)
-            elif str in self.reaction_dic:
-                await ctx.send(self.reaction_dic[str][0])
             else:
-                await ctx.send('ㅇ?')
+                try:
+                    await self.reaction(ctx, str)
+                except:
+                    await ctx.send('ㅇ?')
         except:
             await self.show_command_info(ctx)
