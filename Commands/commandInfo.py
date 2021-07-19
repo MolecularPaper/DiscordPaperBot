@@ -2,10 +2,10 @@ import discord
 from discord.ext import commands
 
 command_kr = '\n!정보 : 봇의 정보를 보여줍니다.' \
-             '\n!필터링 <active>: 채팅 필터링 기능을 키거나 끕니다.'
+             '\n!필터링 <active>: 채팅 필터링 기능을 키거나 끕니다. (추가예정)'
 
 command_en = '\n!Info : 봇의 정보를 보여줍니다.' \
-             '\n!filtering <active>: 채팅 필터링 기능을 키거나 끕니다.'
+             '\n!filtering <active>: 채팅 필터링 기능을 키거나 끕니다. (추가예정)'
 
 
 class CommandInfo(commands.Cog):
@@ -35,7 +35,8 @@ class CommandInfo(commands.Cog):
         await ctx.send(embed=_embed)
 
     async def show_command_info(self, ctx):
-        _embed = discord.Embed(title='명령어 정보', description='!command or 명령어 <언어> : 입력한 언어의 명령어 목록을 표시합니다. \n\n(사용가능한 언어 목록: kr, en)', color=0x00ff00)
+        _embed = discord.Embed(title='명령어 정보', description='!command or 명령어 <언어> : 입력한 언어의 명령어 목록을 표시합니다. '
+                                                           '\n\n(사용가능한 언어 목록: kr, en)', color=0x00ff00)
         await ctx.send(embed=_embed)
 
     @commands.command(name='command')
