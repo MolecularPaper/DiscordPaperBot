@@ -7,6 +7,7 @@ from discord.ext import commands
 class Chat(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        #reaction_data.json의 파일의 인코딩이 UTF-8이여야 한다. 안그럼 오류남
         with open('reaction_data.json', "r") as json_file:
             self.reaction_dic = json.load(json_file)
 
@@ -26,8 +27,13 @@ class Chat(commands.Cog):
             ctx.send('잘못 입력하였습니다!')
             return None
 
-        # 알려준 문장 등록
+        # 이미 등록되있는지 확인
         recation = temp.split(':')
+        if recation[0].strip() in self.reaction_dic:
+            await ctx.send('이미 등록되어있습니다!')
+            return None
+
+        # 알려준 문장 등록
         self.reaction_dic[recation[0].strip()] = (recation[1].strip(), ctx.message.author.name)
         with open('reaction_data.json', "w") as json_file:
             json.dump(self.reaction_dic, json_file, ensure_ascii=False, indent='\t')
