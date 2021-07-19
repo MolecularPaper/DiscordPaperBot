@@ -1,8 +1,8 @@
-import asyncio
+import asyncio, os
 
 
 async def check_reaction(ctx, str):
-    if str == '최진원':
+    if str == os.environ['unique_name1'] and ctx.message.author.name != os.environ['unique_name1']:
         await unique_reaction_1(ctx)
         return True
 
