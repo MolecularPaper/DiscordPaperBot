@@ -1,4 +1,5 @@
-import json, asyncio, discord, unique_reaction
+import json, asyncio, discord
+from Commands import unique_reaction
 from discord.ext import commands
 
 
