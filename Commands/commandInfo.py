@@ -22,7 +22,6 @@ async def show_command_info(ctx, lan):
 
 class CommandInfo(commands.Cog):
     def __init__(self, bot):
-        bot.remove_command("help")
         self.bot = bot
 
     @commands.command(name='command')
