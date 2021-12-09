@@ -6,7 +6,7 @@ async def check_reaction(ctx, str):
         await unique_reaction_1(ctx)
         return True
     elif str == '병신' or str == 'ㅄ' or str == 'ㅂㅅ':
-        await unique_reaction_1(ctx)
+        await unique_reaction_2(ctx)
         return True
 
 
@@ -16,6 +16,6 @@ async def unique_reaction_1(ctx):
     await m.edit(content='ㅇ?')
 
 async def unique_reaction_2(ctx):
-    m = await ctx.send('시발 능력도 없는 새끼 주제에... ')
+    m = await ctx.send('**지는 ㅋ** ')
     await asyncio.sleep(0.5)
     await m.edit(content='ㅇ?')
