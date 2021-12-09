@@ -10,10 +10,9 @@ async def execution(ctx):
 
 class Info(commands.Cog):
     def __init__(self, bot):
-        bot.remove_command("help")
         self.bot = bot
 
-    @commands.command(name='Info')
+    @commands.command(name='info')
     async def paper_info_en(self, ctx):
         await execution(ctx)
 
