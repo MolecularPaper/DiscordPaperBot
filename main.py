@@ -1,7 +1,9 @@
 import discord, os
 from Commands import info, chat, commandInfo
 from discord.ext import commands
+
 bot = commands.Bot(command_prefix='!')
+
 
 @bot.event
 async def on_ready():
@@ -13,3 +15,8 @@ bot.add_cog(commandInfo.CommandInfo(bot))
 bot.add_cog(info.Info(bot))
 bot.add_cog(chat.Chat(bot))
 bot.run(os.environ['token'])
+
+
+@bot.event
+async def on_command_error(ctx, error):
+    await ctx.send('그런 명령어는 없는데요...?')
