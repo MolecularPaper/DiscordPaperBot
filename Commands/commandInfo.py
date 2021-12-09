@@ -16,7 +16,7 @@ async def show_command_info(ctx, lan):
     if lan == 'kr':
         _embed = discord.Embed(title='페이퍼 명령어', description=command_kr, color=0x00ff00)
     elif lan == 'en':
-        _embed = discord.Embed(title='페이퍼 명령어', description=command_en, color=0x00ff00)
+        _embed = discord.Embed(title='PaperBot commands', description=command_en, color=0x00ff00)
     await ctx.send(embed=_embed)
 
 
