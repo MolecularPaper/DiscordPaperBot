@@ -1,5 +1,5 @@
 import discord, os
-from Commands import info, help, chat, commandInfo
+from Commands import info, chat, commandInfo
 from discord.ext import commands
 bot = commands.Bot(command_prefix='!')
 
@@ -11,6 +11,5 @@ async def on_ready():
 
 bot.add_cog(commandInfo.CommandInfo(bot))
 bot.add_cog(info.Info(bot))
-bot.add_cog(help.Help(bot))
 bot.add_cog(chat.Chat(bot))
 bot.run(os.environ['token'])
