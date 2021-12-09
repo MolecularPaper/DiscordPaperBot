@@ -1,11 +1,12 @@
 import discord
 from discord.ext import commands
 
-command_kr = '\n!정보 : 봇의 정보를 보여줍니다.' \
-             '\n!필터링 <active>: 채팅 필터링 기능을 키거나 끕니다. (추가예정)'
+command_kr = '\n\n!정보 : 봇의 정보를 보여줍니다.' \
+             '\n\n!페이퍼 : 페이퍼 봇과 대화를 할 수 있습니다.'
+             #'\n\n!필터링 <active>: 채팅 필터링 기능을 키거나 끕니다. (추가예정)'
 
-command_en = '\n!Info : 봇의 정보를 보여줍니다.' \
-             '\n!filtering <active>: 채팅 필터링 기능을 키거나 끕니다. (추가예정)'
+command_en = '\n\n!Info : Show bot info' \
+             #'\n\n!filtering <active>: Turn chat filtering on or off. '
 
 
 class CommandInfo(commands.Cog):
