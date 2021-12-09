@@ -34,9 +34,9 @@ class CommandInfo(commands.Cog):
         await show_command_info(ctx, 'kr')
 
     @commands.command(name='help')
-    async def help_en(self, ctx, *args, 'kr'):
+    async def help_en(self, ctx, *args):
         await show_command_info(ctx, 'en')
 
     @commands.command(name='도움말')
-    async def help_kr(self, ctx, *args, 'kr'):
+    async def help_kr(self, ctx, *args):
         await show_command_info(ctx, 'kr')
