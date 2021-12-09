@@ -16,7 +16,7 @@ async def on_ready():
 async def on_command_error(ctx, error):
     await ctx.send('그런 명령어는 없는데요...?')
 
-
+bot.remove_command("help")
 bot.add_cog(commandInfo.CommandInfo(bot))
 bot.add_cog(info.Info(bot))
 bot.add_cog(chat.Chat(bot))
