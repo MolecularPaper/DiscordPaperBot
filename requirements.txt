@@ -2,3 +2,5 @@ discord.py[voice]
 asyncio
 youtube_dl
 ffmpeg-python
+beautifulsoup4
+requests
