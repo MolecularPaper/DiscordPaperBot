@@ -17,5 +17,6 @@ class Info(commands.Cog):
     @commands.command(name='명령어')
     async def info_command(self, ctx):
         _embed = discord.Embed(title='명령어 정보', description='!정보 - 페이퍼봇의 기본적인 정보를 알려줍니다.'
-                                                           '\n\n !서버상태 - 디스코드 서버의 상태를 알려줍니다. ', color=0x00ff00)
+                                                           '\n\n !서버상태 - 디스코드 서버의 상태를 알려줍니다. '
+                                                           '\n\n !식사추천 - 식사를 추천해줍니다 ', color=0x00ff00)
         await ctx.send(embed=_embed)
