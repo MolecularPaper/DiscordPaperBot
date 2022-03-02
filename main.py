@@ -1,7 +1,9 @@
-import discord, os
+import discord
+import os
+from discord.ext import commands
+
 from Commands import info, todays_meal, discord_status, game_ranking
 from Song import song
-from discord.ext import commands
 
 bot = commands.Bot(command_prefix='!')
 

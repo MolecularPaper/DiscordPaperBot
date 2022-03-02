@@ -1,4 +1,5 @@
 import requests
+import discord
 from discord.ext import commands
 from bs4 import BeautifulSoup  # HTML을 파싱하는 모듈
 
