@@ -12,7 +12,7 @@ class Meal(commands.Cog):
         menu = f.readlines()
 
         if args:
-            for x in range(int(args)):
+            for x in range(int(args[0])):
                 await ctx.send(f'추천할 메뉴: {random.choice(menu)}')
         else:
             await ctx.send(f'추천할 메뉴: {random.choice(menu)}')
