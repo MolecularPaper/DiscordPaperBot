@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup  # HTML을 파싱하는 모듈
 site_link = 'https://www.gamemeca.com/ranking.php'
 
 
-class GOTY(commands.Cog):
+class Ranking(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
