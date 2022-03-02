@@ -7,7 +7,12 @@ class Meal(commands.Cog):
         self.bot = bot
 
     @commands.command(name='식사추천')
-    async def raffle(self, ctx):
+    async def raffle(self, ctx, args):
         f = open('menu.txt')
         menu = f.readlines()
-        await ctx.send(f'추천할 메뉴: {random.choice(menu)}')
+
+        if args:
+            for x in range(int(args)):
+                await ctx.send(f'추천할 메뉴: {random.choice(menu)}')
+        else:
+            await ctx.send(f'추천할 메뉴: {random.choice(menu)}')
