@@ -27,4 +27,8 @@ bot.add_cog(mafia_game.Mafia(bot))
 # Song
 bot.add_cog(song.Song(bot))
 
-bot.run(os.environ['token'])
+if os.path.isfile('token.txt'):
+    f = open('token.txt')
+    bot.run(f.readline())
+else:
+    bot.run(os.environ['token'])
