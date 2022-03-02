@@ -1,7 +1,7 @@
 import discord
 import os
 from discord.ext import commands
-
+from Game import mafia_game
 from Commands import info, todays_meal, discord_status, game_ranking
 from Song import song
 
@@ -15,9 +15,17 @@ async def on_ready():
     print("페이퍼봇 준비 완료!")
 
 
+# command
 bot.add_cog(info.Info(bot))
-bot.add_cog(song.Song(bot))
 bot.add_cog(game_ranking.Ranking(bot))
 bot.add_cog(todays_meal.Meal(bot))
 bot.add_cog(discord_status.Status(bot))
-bot.run(os.environ['token'])
+
+# Game
+bot.add_cog(mafia_game.Mafia(bot))
+
+# Song
+bot.add_cog(song.Song(bot))
+
+# bot.run(os.environ['token'])
+bot.run('ODIzNTM2NzA2NDU1NzMyMjM0.YFiQUw.Mw4UP3Y6Y3NxCJiLQsds5Ht6DQc')
