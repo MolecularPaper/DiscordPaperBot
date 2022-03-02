@@ -27,5 +27,4 @@ bot.add_cog(mafia_game.Mafia(bot))
 # Song
 bot.add_cog(song.Song(bot))
 
-# bot.run(os.environ['token'])
-bot.run('ODIzNTM2NzA2NDU1NzMyMjM0.YFiQUw.Mw4UP3Y6Y3NxCJiLQsds5Ht6DQc')
+bot.run(os.environ['token'])
