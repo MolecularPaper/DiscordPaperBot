@@ -12,9 +12,11 @@ class Meal(commands.Cog):
         menu = f.readlines()
 
         if args:
+            if int(args[0]) > 10:
+                ctx.send('10개 이하만 추천 가능합니다.')
+                return
+            
             for x in range(int(args[0])):
                 await ctx.send(f'추천할 메뉴: {random.choice(menu)}')
-        elif int(args[0]) > 10:
-            ctx.send('10개 이하만 추천 가능합니다.')
         else:
             await ctx.send(f'추천할 메뉴: {random.choice(menu)}')
