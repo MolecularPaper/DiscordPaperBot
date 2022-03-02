@@ -7,7 +7,7 @@ class Meal(commands.Cog):
         self.bot = bot
 
     @commands.command(name='식사추천')
-    async def raffle(self, ctx, args):
+    async def raffle(self, ctx, *args):
         f = open('menu.txt')
         menu = f.readlines()
 
