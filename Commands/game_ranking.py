@@ -15,7 +15,7 @@ class Ranking(commands.Cog):
         response = requests.get(site_link)
         soup = BeautifulSoup(response.content, 'html.parser')
         div = soup.select('table.ranking-table tbody > tr')
-        _description = "[게임 순위]\n"
+        _description = ""
 
         for index, element in enumerate(div, 1):
             name = element.select_one('div.game-name a').get_text()
@@ -23,5 +23,5 @@ class Ranking(commands.Cog):
 
         _description += '\n 출처 : https://www.gamemeca.com/ranking.php'
 
-        _embed = discord.Embed(title='페이퍼봇 정보', description=_description, color=0x00ff00)
+        _embed = discord.Embed(title='게임순위', description=_description, color=0x00ff00)
         await ctx.send(embed=_embed)
