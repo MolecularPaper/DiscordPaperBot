@@ -10,7 +10,7 @@ class Ranking(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='게임순위 TOP 10')
+    @commands.command(name='게임순위')
     async def server_status(self, ctx):
         response = requests.get(site_link)
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -24,5 +24,5 @@ class Ranking(commands.Cog):
 
         _description += '\n 출처 : https://www.gamemeca.com/ranking.php'
 
-        _embed = discord.Embed(title='게임순위', description=_description, color=0x00ff00)
+        _embed = discord.Embed(title='게임순위 TOP 10', description=_description, color=0x00ff00)
         await ctx.send(embed=_embed)
