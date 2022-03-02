@@ -13,7 +13,7 @@ class Meal(commands.Cog):
 
         if args:
             if int(args[0]) > 10:
-                ctx.send('10개 이하만 추천 가능합니다.')
+                await ctx.send('10개 이하만 추천 가능합니다.')
                 return
             
             for x in range(int(args[0])):
