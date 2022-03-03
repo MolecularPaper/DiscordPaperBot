@@ -175,13 +175,19 @@ class Mafia(commands.Cog):
             await self.mafia_chat_channel.send('투표자가 없습니다. 투표를 넘깁니다. ')
             return
 
-        max_key = [k for k, v in self.kill_vote_list.items() if max(self.kill_vote_list.values()) == v]
-        if len(max_key) > 1:
+        max = max(self.kill_vote_list.values())
+        list = []
+        for elements in self.kill_vote_list:
+            for key, value in self.kill_vote_list.items():
+                if value == max:
+                    list.append(key)
+
+        if len(list) > 1:
             await self.mafia_chat_channel.send('사살 목표가 결정되지 않았습니다. 투표를 넘깁니다. ')
         else:
-            self.kill_member = max_key[0]
-            print(max_key)
-            await self.mafia_chat_channel.send(f'{max_key[0]} 을 사살합니다.')
+            self.kill_member = list[0]
+            print(list[0])
+            await self.mafia_chat_channel.send(f'{self.kill_member.name} 을 사살합니다.')
 
     # 소생할 유저 선택
     async def revive_user(self, ctx, name):
