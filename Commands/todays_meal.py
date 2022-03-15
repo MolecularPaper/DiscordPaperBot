@@ -14,9 +14,9 @@ class Meal(commands.Cog):
         send_menu = ""
 
         if args:
-            if int(args[0]) > 10:
-                await ctx.send('10개 이하만 추천 가능합니다.')
-                return
+            # if int(args[0]) > 10:
+            #     await ctx.send('10개 이하만 추천 가능합니다.')
+            #     return
             
             for x in range(int(args[0])):
                 send_menu += f'{x + 1}. {random.choice(menu)}'
