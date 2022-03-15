@@ -1,8 +1,8 @@
 import discord
 import os
 from discord.ext import commands
-from Game import mafia_game
-from Commands import info, todays_meal, discord_status, game_ranking
+
+from Commands import info, todays_meal, discord_status, game_ranking, reaction
 from Song import song
 
 bot = commands.Bot(command_prefix='페이퍼 ')
@@ -20,15 +20,16 @@ bot.add_cog(info.Info(bot))
 bot.add_cog(game_ranking.Ranking(bot))
 bot.add_cog(todays_meal.Meal(bot))
 bot.add_cog(discord_status.Status(bot))
+bot.add_cog(reaction.Reaction(bot))
 
 # Game
-#bot.add_cog(mafia_game.Mafia(bot))
+# bot.add_cog(mafia_game.Mafia(bot))
 
 # Song
 bot.add_cog(song.Song(bot))
 
-if os.path.isfile('token.txt'):
-    f = open('token.txt')
+if os.path.isfile('./Data/token.txt'):
+    f = open('./Data/token.txt')
     bot.run(f.readline())
 else:
     bot.run(os.environ['token'])
