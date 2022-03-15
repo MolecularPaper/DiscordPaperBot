@@ -19,9 +19,9 @@ class Meal(commands.Cog):
                 return
             
             for x in range(int(args[0])):
-                send_menu += f'추천할 메뉴: {random.choice(menu)}\n'
+                send_menu += f'{x + 1}. {random.choice(menu)}'
         else:
-            send_menu += f'추천할 메뉴: {random.choice(menu)}\n'
+            send_menu += f'1. {random.choice(menu)}\n'
 
         _embed = discord.Embed(title='추천메뉴', description=send_menu, color=0x00ff00)
-        ctx.send(_embed)
+        await ctx.send(embed=_embed)

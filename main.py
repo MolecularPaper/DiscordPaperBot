@@ -5,7 +5,7 @@ from Game import mafia_game
 from Commands import info, todays_meal, discord_status, game_ranking
 from Song import song
 
-bot = commands.Bot(command_prefix='!')
+bot = commands.Bot(command_prefix='페이퍼 ')
 
 
 @bot.event
