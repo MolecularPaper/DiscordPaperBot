@@ -1,4 +1,5 @@
 import random
+import discord
 from discord.ext import commands
 
 
@@ -10,6 +11,7 @@ class Meal(commands.Cog):
     async def raffle(self, ctx, *args):
         f = open('menu.txt', 'r', encoding="UTF-8")
         menu = f.readlines()
+        send_menu = ""
 
         if args:
             if int(args[0]) > 10:
@@ -17,6 +19,9 @@ class Meal(commands.Cog):
                 return
             
             for x in range(int(args[0])):
-                await ctx.send(f'추천할 메뉴: {random.choice(menu)}')
+                send_menu += f'추천할 메뉴: {random.choice(menu)}\n'
         else:
-            await ctx.send(f'추천할 메뉴: {random.choice(menu)}')
+            send_menu += f'추천할 메뉴: {random.choice(menu)}\n'
+
+        _embed = discord.Embed(title='추천메뉴', description=send_menu, color=0x00ff00)
+        ctx.send(_embed)
