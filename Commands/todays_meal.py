@@ -8,7 +8,7 @@ class Meal(commands.Cog):
 
     @commands.command(name='식사추천')
     async def raffle(self, ctx, *args):
-        f = open('menu.txt')
+        f = open('menu.txt', 'r', encoding="UTF-8")
         menu = f.readlines()
 
         if args:

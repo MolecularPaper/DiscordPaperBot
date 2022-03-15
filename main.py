@@ -22,7 +22,7 @@ bot.add_cog(todays_meal.Meal(bot))
 bot.add_cog(discord_status.Status(bot))
 
 # Game
-bot.add_cog(mafia_game.Mafia(bot))
+#bot.add_cog(mafia_game.Mafia(bot))
 
 # Song
 bot.add_cog(song.Song(bot))
