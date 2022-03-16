@@ -31,12 +31,8 @@ class Reaction(commands.Cog):
 
         if msg == '질긴종이':
             await self.send_edit(ctx, '개같은 주인놈...', '**위대하고 뛰어난 저의 창조주십니다!**', 0.3)
-        elif msg == '최진원':
-            await self.send_edit(ctx, '안탑갑게도 그는 대머리...', 'ㅇ?', 0.5)
-        elif msg == '이명재':
-            await self.send_edit(ctx, '병신 ㅋㅋ', '그게 누구임?', 0.5)
-        elif msg == '조병현':
-            await self.send_edit(ctx, '머저리에 병신에... 팀 프로젝트를 던지지 않나... 난 살면서 이런 개새끼를 첨봤어...', "뭐 ", 0.3)
+        elif msg == '병신':
+            await self.send_edit(ctx, '**지는ㅋ**', '뭐', 0.5)
         elif msg in reactions:
             await ctx.send(random.choice(reactions[msg]))
 
