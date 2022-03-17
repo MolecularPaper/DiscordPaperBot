@@ -28,30 +28,34 @@ async def send_msg(ctx):
         await send_edit(ctx.channel, '**지는ㅋ**', '뭐', 0.5)
     elif msg in reactions:
         await ctx.channel.send(random.choice(reactions[msg]))
-    elif msg in ['명령어', '정보', '서버상태', '식사추천', '게임순위']:
-        await ctx.channel.send('그건 내 명령어다 애송이')
     else:
         return True
     return False
-
-
-async def learn(ctx):
-    msg = ctx.content.replace("페이퍼 ", "")
-    arg1 =
-    arg2 =
-    if reactions.get(arg1) is None:
-        reactions[arg1] = [arg2]
-    elif arg2 in reactions[arg1]:
-        await ctx.channel.send('이미 배웠습니다!')
-        return
-    else:
-        reactions[arg1].append(arg2)
-    await ctx.send(f'{arg1} - {arg2}, 확인했습니다.')
-    f = open('./Data/reaction.txt', 'a', encoding="UTF-8")
-    f.write(f"{arg1} : {arg2}\n")
 
 
 async def send_edit(channel, msg, edit_msg, delay):
     tk = await channel.send(msg)
     await asyncio.sleep(delay)
     await tk.edit(content=edit_msg)
+
+
+class Reaction(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        read_reaction()
+
+    @commands.command(name='배워')
+    async def learn(self, ctx, word, *args):
+        text = ' '.join(args)
+        if reactions.get(word) is None:
+            reactions[word] = [text]
+        elif text in reactions[word]:
+            await ctx.send('이미 배웠습니다!')
+            return
+        elif text in ['명령어', '정보', '서버상태', '식사추천', '게임순위']:
+            await ctx.send('그건 내 명령어다 애송이')
+        else:
+            reactions[word].append(text)
+        await ctx.send(f'{word} - {text}, 확인했습니다.')
+        f = open('./Data/reaction.txt', 'a', encoding="UTF-8")
+        f.write(f"{word} : {text}\n")
