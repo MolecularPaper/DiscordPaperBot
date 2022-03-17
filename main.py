@@ -14,7 +14,7 @@ bot.add_cog(info.Info(bot))
 bot.add_cog(game_ranking.Ranking(bot))
 bot.add_cog(todays_meal.Meal(bot))
 bot.add_cog(discord_status.Status(bot))
-bot.add_cog(reaction.Reaction(bot))
+bot.add_cog(reaction.ReAction(bot))
 
 # Game
 # bot.add_cog(mafia_game.Mafia(bot))

@@ -10,6 +10,7 @@ prefix = '마피아'
 class Mafia(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
         # 변수
         self.revive_member = None
         self.kill_member = None
@@ -40,11 +41,11 @@ class Mafia(commands.Cog):
             await self.execution_agree_vote(ctx, True)
         elif args[0] == '처형반대':
             await self.execution_agree_vote(ctx, False)
-        elif args[0] == '사살':
+        elif args[0] == '사살' and ctx.channel is self.channel_list['m_chat']:
             await self.kill_vote(ctx, args[1])
-        elif args[0] == '치료':
+        elif args[0] == '치료' and ctx.channel is self.channel_list['d_chat']:
             await self.revive_user(ctx, args[1])
-        elif args[0] == '조사':
+        elif args[0] == '조사' and ctx.channel is self.channel_list['p_chat']:
             await self.user_research(ctx, args[1])
 
     # 게임 시작
@@ -79,10 +80,10 @@ class Mafia(commands.Cog):
     async def waiting_join(self, ctx):
         _embed = discord.Embed(title='마피아게임', description='게임에 참여할려면 마피아게임-대기 채널에 참가해주세요.'
                                                           '\n게임을 하기 위해서는 최소 4명 이상의 인원이 필요합니다.'
-                                                          '\n게임은 20초 후에 시작되며, 이후 진행 상황은 마피아게임-공용-채팅에 나타납니다.'
+                                                          '\n게임은 30초 후에 시작되며, 이후 진행 상황은 마피아게임-공용-채팅에 나타납니다.'
                                , color=0x00ff00)
         await ctx.send(embed=_embed)
-        await asyncio.sleep(20)
+        await asyncio.sleep(30)
 
         _members = self.channel_list['lobby'].members
         if len(_members) >= 4:
@@ -93,8 +94,8 @@ class Mafia(commands.Cog):
                 await self.set_channel_permissions(member, self.channel_list['g_chat'])
                 self.channel_list[f'{member.name}_vote'] = await self.create_channel(ctx, f'{member.name}-투표',
                                                                                      discord.ChannelType.text,
-                                                                                     category=self.channel_list[
-                                                                                         'category'], can_read=False,
+                                                                                     category=self.channel_list['category'],
+                                                                                     can_read=False,
                                                                                      can_send=False)
             await self.assign_role()
             await self.loop(ctx)
@@ -134,13 +135,17 @@ class Mafia(commands.Cog):
         await self.send_dm(member, f'당신의 역할은 {role} 입니다.')
         print(f'[마피아게임] {member.name}의 역할이 {role}로 설정됨')
 
-    # 낮/밤 루프
+    # 게임 흐름 루프
     async def loop(self, ctx):
         while True:
             await self.night()
             await asyncio.sleep(2)
             if await self.day():
                 break
+            await self.debate()
+            await self.start_execution_vote()
+            await self.final_objection()
+            await self.start_execution_agree_vote()
         await asyncio.sleep(5)
         await self.channel_list['g_chat'].send('게임을 종료합니다.')
         await self.end_game(ctx)
@@ -169,8 +174,27 @@ class Mafia(commands.Cog):
         await self.set_active_role_channel(False)
 
         # 사살 목표 확정
-        await self.kill_user()
+        await self.kill_confirmed()
         return
+
+    # 직업채널 투표 시작
+    async def start_vote_role_channel(self):
+        print(f'[마피아게임] 직업채널 투표 시작됨')
+
+        # 마피아 채널에서 사살 투표
+        await self.user_list(self.channel_list['m_chat'])
+        await self.channel_list['m_chat'].send(
+            f'사살할 유저를 투표해주세요.(25초)\n!{prefix} 사살 <유저이름> 으로 사살할 유저를 투표할 수 있습니다.')
+
+        # 의사 채널에서 치료할 사람 투표
+        await self.user_list(self.channel_list['d_chat'])
+        await self.channel_list['d_chat'].send(
+            f'치료할 유저를 투표해주세요.(25초)\n!{prefix} 치료 <유저이름> 으로 치료할 유저를 선택할 수 있습니다.')
+
+        # 경찰 채널에서 치료할 사람 투표
+        await self.user_list(self.channel_list['p_chat'])
+        await self.channel_list['p_chat'].send(
+            f'조사할 유저를 투표해주세요.(25초)\n!{prefix} 조사 <유저이름> 으로 조사할 유저를 선택할 수 있습니다.')
 
     # 낮 진행
     async def day(self):
@@ -186,52 +210,19 @@ class Mafia(commands.Cog):
         await asyncio.sleep(0.5)
         if self.kill_member is None:
             await self.channel_list['g_chat'].send('아무일도 일어나지 않았습니다...')
+        elif self.kill_member is self.revive_member:
+            await self.channel_list['g_chat'].send(f'<{self.kill_member.name}>가 마피아에게 공격받았지만, 의사에 의하여 치료되었습니다.')
         else:
-            await self.channel_list['g_chat'].send(f'<{self.kill_member.name}> 가 사망하였습니다.')
+            await self.channel_list['g_chat'].send(f'<{self.kill_member.name}>가 사망하였습니다.')
             if await self.check_game():
                 return True
-        await self.kill_vote_reset()
+        await self.vote_reset()
         await asyncio.sleep(0.5)
-
-        # 토론
-        chat_time = 15 * len(self.channel_list['g_voice'].members)
-        await self.channel_list['g_chat'].send(f'토론을 시작합니다.\n토론은 {chat_time}초간 진행됩니다.')
-        await asyncio.sleep(chat_time)
-
-        # 처형투표
-        await self.channel_list['g_chat'].send(f'처형 투표를 시작합니다.\n 25초간 진행되며, <자신닉네임>-투표 채널에서 처형투표할 수 있습니다.')
-        await self.set_active_execution_vote(True, send_message=f'!{prefix} 처형 <유저이름> 으로 처형투표를 할 수 있습니다.', send_user_list=True)
-        await asyncio.sleep(25)
-
-        # 투표 종료
-        await self.set_active_execution_vote(False)
-        await self.kill_user(is_execution=True)
-
-        # 투표 확인
-        if self.kill_member is not None:
-            # 최후의 반론
-            await self.all_chat_mute(self.channel_list['g_chat'], False)
-            await self.set_channel_permissions(self.kill_member, self.channel_list['g_chat'], can_send=True)
-            await self.channel_list[f'g_chat'].send(f'최후의 반론을 진행합니다.')
-            await asyncio.sleep(15)
-
-            # 찬반투표
-            self.can_execution_vote = True
-            await self.set_channel_permissions(self.kill_member, self.channel_list['g_chat'], can_send=False)
-            await self.set_active_execution_vote(True, send_message=f'찬반투표를 진행합니다.\n!{prefix} 사형찬성/사형반대 로 투표할 수 있습니다.')
-            await asyncio.sleep(10)
-
-            if self.execution_vote_agree > self.execution_vote_opposition:
-                await self.change_ghost()
-            else:
-                await self.kill_vote_reset()
 
         return False
 
     # 게임 진행상황 확인
     async def check_game(self):
-        print(f'[마피아게임] ========== 게임 진행상황 확인 ==========')
-
         mafia_count = 0
         citizen_count = 0
         for member in self.members.values():
@@ -249,42 +240,97 @@ class Mafia(commands.Cog):
 
         return False
 
+    # 토론
+    async def debate(self):
+        chat_time = 15 * len(self.channel_list['g_voice'].members)
+        await self.channel_list['g_chat'].send(f'토론을 시작합니다.({chat_time}초)')
+        await asyncio.sleep(chat_time)
+
+    # 처형 투표 시작
+    async def start_execution_vote(self):
+        # 처형투표
+        await self.channel_list['g_chat'].send(f'처형 투표를 시작합니다(25초).\n <자신닉네임>-투표 채널에서 처형투표할 수 있습니다.')
+        await self.set_active_execution_vote(True, send_message=f'!{prefix} 처형 <유저이름> 으로 처형투표를 할 수 있습니다.', send_user_list=True)
+        await asyncio.sleep(25)
+
+        # 투표 종료
+        await self.set_active_execution_vote(False)
+        await self.kill_confirmed(is_execution=True)
+
     # 처형 투표
-    async def execution_agree_vote(self, ctx, value: bool):
+    async def execution_vote(self, ctx, name: str):
         if ctx.channel is self.channel_list[f'{ctx.author.name}_vote']:
+            await self.kill_vote(ctx, name, send_vote_list=False)
+
+    # 최후의 반론
+    async def final_objection(self):
+        # 투표 확인
+        if self.kill_member is not None:
+            # 최후의 반론
+            await self.all_chat_mute(self.channel_list['g_chat'], False)
+            await self.set_channel_permissions(self.kill_member, self.channel_list['g_chat'], can_send=True)
+            await self.channel_list[f'g_chat'].send(f'최후의 반론을 진행합니다.(15초)')
+            await asyncio.sleep(15)
+    
+    # 처형 찬반 투표 시작
+    async def start_execution_agree_vote(self):
+        # 찬반투표
+        self.can_execution_vote = True
+        await self.set_channel_permissions(self.kill_member, self.channel_list['g_chat'], can_send=False)
+        await self.set_active_execution_vote(True, send_message=f'찬반투표를 진행합니다(10초).\n!{prefix} 사형찬성/사형반대 로 투표할 수 있습니다.')
+        await asyncio.sleep(10)
+
+        if self.execution_vote_agree > self.execution_vote_opposition:
+            await self.change_ghost()
+        else:
+            await self.vote_reset()
+
+    # 처형 찬반 투표
+    async def execution_agree_vote(self, ctx, value: bool):
+        print('테스트1')
+        if ctx.channel is self.channel_list[f'{ctx.author.name}_vote']:
+            print('테스트2')
             if value:
                 self.execution_vote_agree += 1
             else:
                 self.execution_vote_opposition += 1
             await self.set_channel_permissions(ctx.author, self.channel_list[f'{ctx.author.name}_vote'], can_send=True)
-            print(f'[마피아게임] {ctx.name}가 {("찬성" if value else "반대")}함')
 
-    # 처형 투표
-    async def execution_vote(self, ctx, name: str):
-        if ctx.channel == self.channel_list[f'{ctx.author.name}_vote']:
-            await self.kill_vote(ctx, name, send_vote_list=False)
-            print(f'[마피아게임] {self.kill_member.name}가 {name}을 처형투표함')
-        return
-
-    # 사살 투표 리셋
-    async def kill_vote_reset(self):
-        self.kill_member = None
-        self.kill_vote_list = {}
+            text = "찬성" if value else "반대"
+            await ctx.send(f'처형에 {text}함')
+            print(f'[마피아게임] {ctx.name}가 {text}함')
 
     # 사살 투표
-    async def kill_vote(self, ctx, name, send_vote_list: bool = True):
-        if self.members.get(name) is None:
-            await self.channel_list['m_chat'].send('없는 유저 입니다.')
-        elif ctx.channel is self.channel_list['m_chat']:
+    async def kill_vote(self, ctx, name, is_execution: bool = False, send_vote_list: bool = True):
+        channel = ("g_chat" if is_execution else "m_chat")
+        text = ("처형" if is_execution else "사살")
+
+        if self.members.get(name) is None or self.members[name][1] == '유령':
+            await self.channel_list[channel].send('없는 유저 입니다.')
+        else:
             self.kill_vote_list[ctx.author.name] = self.members[name][0]
+            await ctx.channel.send(f'{name}을 투표 하였습니다.')
             if send_vote_list:
-                await self.send_kill_vote_list()
-            print(f'[마피아게임] {ctx.author.name} 가 {name}을 사살투표함')
+                await self.send_kill_vote_list(ctx)
+            print(f'[마피아게임] {ctx.author.name} 가 {name}을 {text}투표함')
+
+    # 사살 투표 리셋
+    async def vote_reset(self):
+        self.revive_member = None
+        self.kill_member = None
+        self.kill_vote_list = {}
+        self.can_execution_vote = False
+        self.execution_vote_agree = 0
+        self.execution_vote_opposition = 0
 
     # 사살 목표 확정
-    async def kill_user(self, is_execution: bool = False):
+    async def kill_confirmed(self, is_execution: bool = False):
+        channel = ("g_chat" if is_execution else "m_chat")
+        text = ("처형" if is_execution else "사살")
+        print(f"[마피아게임] {text} 투표: {self.kill_vote_list}")
+
         if not bool(self.kill_vote_list):
-            await self.channel_list['m_chat'].send('투표자가 없습니다. 투표를 넘깁니다. ')
+            await self.channel_list[channel].send('투표자가 없습니다. 투표를 넘깁니다. ')
             return
 
         vote = {}
@@ -295,42 +341,38 @@ class Mafia(commands.Cog):
                 vote[value] = 1
 
         max_list = [k for k, v in vote.items() if max(vote.values()) == v]
-
-        channel = ("g_chat" if is_execution else "m_chat")
-        text = ("처형" if is_execution else "사살")
         if len(max_list) > 1:
             await self.channel_list[channel].send(f'{text} 대상이 결정되지 않았습니다.')
-        elif max_list[0] is not self.revive_member:
+        else:
             self.kill_member = max_list[0]
             await self.channel_list[channel].send(f'{self.kill_member.name} 을 {text} 합니다.')
             print(f'[마피아게임] {self.kill_member.name}가 {text}됨')
 
     # 사살 목표 투표 목록 보내기
-    async def send_kill_vote_list(self):
+    async def send_kill_vote_list(self, ctx):
         vote_list = ''
         for key, value in self.kill_vote_list.items():
             vote_list += f'{key} - {value}\n'
 
         _embed = discord.Embed(title='마피아게임', description=vote_list, color=0x00ff00)
-        await self.channel_list['m_chat'].send(embed=_embed)
+        await ctx.send(embed=_embed)
 
     # 소생할 유저 선택
     async def revive_user(self, ctx, name):
-        print(f'[마피아게임] {ctx.author.name} - 치료')
-        if self.members.get(name) is None:
+        if self.members.get(name) is None or self.members[name][1] == '유령':
             await self.channel_list['d_chat'].send('없는 유저 입니다.')
-        elif ctx.channel is self.channel_list['d_chat']:
+        else:
             self.revive_member = self.members[name][0]
             await self.channel_list['d_chat'].send(f'살릴사람: {name}')
             print(f'[마피아게임] {ctx.author.name}가 {name}을 치료함')
 
     # 유저 직업 조사
     async def user_research(self, ctx, name):
-        if self.members.get(name) is None:
+        if self.members.get(name) is None or self.members[name][1] == '유령':
             await self.channel_list['p_chat'].send('없는 유저 입니다.')
         elif not self.can_search:
             await self.channel_list['p_chat'].send('더이상 조사할 수 없습니다.')
-        elif ctx.channel is self.channel_list['p_chat']:
+        else:
             await self.channel_list['p_chat'].send(f'{name}의 직업: {self.members[name][1]}')
             self.can_search = False
             print(f'[마피아게임] {ctx.author.name}가 {name}을 조사함')
@@ -340,12 +382,16 @@ class Mafia(commands.Cog):
         if self.kill_member is not None:
             self.members[self.kill_member.name] = (self.kill_member, '유령')
             await self.kill_member.edit(mute=True)
+            for channel in self.channel_list.values():
+                await self.set_channel_permissions(self.kill_member, channel, can_read=True, can_send=False)
             print(f'[마피아게임] {self.kill_member.name}가 유령으로 변경됨')
 
     # channel 에 유저목록 보내기
     async def user_list(self, channel: discord.TextChannel):
         users = '유저목록\n'
         for i, member in enumerate(self.channel_list['g_voice'].members):
+            if self.members[member.name][1] == '유령':
+                continue
             users += f'{i}.{member.name}\n'
         _embed = discord.Embed(title='마피아게임', description=users, color=0x00ff00)
         await channel.send(embed=_embed)
@@ -366,7 +412,6 @@ class Mafia(commands.Cog):
             return
 
         print(f'[마피아게임] ========== 게임 종료 ==========')
-
         for ch_key, ch in self.channel_list.items():
             await ch.delete()
 
@@ -417,43 +462,24 @@ class Mafia(commands.Cog):
                 await self.set_channel_permissions(member[0], self.channel_list['p_chat'], can_send=active)
                 print(f'[마피아게임] 직업채널 활성화됨')
 
-    # 직업채널 투표 시작
-    async def start_vote_role_channel(self):
-        print(f'[마피아게임] 직업채널 투표 시작됨')
-
-        # 마피아 채널에서 사살 투표
-        await self.user_list(self.channel_list['m_chat'])
-        await self.channel_list['m_chat'].send(
-            f'사살할 유저를 투표해주세요.\n 투표는 25초간 진행됩니다.\n!{prefix} 사살 <유저이름> 으로 사살할 유저를 투표할 수 있습니다.')
-
-        # 의사 채널에서 치료할 사람 투표
-        await self.user_list(self.channel_list['d_chat'])
-        await self.channel_list['d_chat'].send(
-            f'치료할 유저를 투표해주세요.\n 투표는 25초간 진행됩니다.\n!{prefix} 치료 <유저이름> 으로 치료할 유저를 선택할 수 있습니다.')
-
-        # 경찰 채널에서 치료할 사람 투표
-        await self.user_list(self.channel_list['p_chat'])
-        await self.channel_list['p_chat'].send(
-            f'조사할 유저를 투표해주세요.\n 투표는 25초간 진행됩니다.\n!{prefix} 조사 <유저이름> 으로 조사할 유저를 선택할 수 있습니다.')
-
     # 모든 유저 음성 뮤트/뮤트 해제
     async def all_voice_mute(self, is_mute: bool):
-        for member in self.channel_list['g_voice'].members:
-            if member == self.bot.user:
+        for name, value in self.members.items():
+            if value[0] == self.bot.user or value[1] == '유령':
                 continue
             try:
-                await member.edit(mute=is_mute)
+                await value[0].edit(mute=is_mute)
             except discord.errors.HTTPException:
                 continue
         print(f'[마피아게임] 모든 유저 음성 {"뮤트" if is_mute else "뮤트해제"}됨')
 
     # 모든 유저 채팅 뮤트/뮤트 해제
     async def all_chat_mute(self, channel: discord.TextChannel, can_send: bool):
-        for member in channel.members:
-            if member == self.bot.user:
+        for name, value in self.members.items():
+            if value[0] == self.bot.user or value[1] == '유령':
                 continue
-            await self.set_channel_permissions(member, channel, can_send=can_send)
-        print(f'[마피아게임] 모든 유저 {channel.name} 채팅 {"뮤트" if can_send else "뮤트해제"}됨')
+            await self.set_channel_permissions(value[0], channel, can_send=can_send)
+        print(f'[마피아게임] 모든 유저 {channel.name} 채팅 {"뮤트해제" if can_send else "뮤트"}됨')
 
     # 채널 권한 설정
     async def set_channel_permissions(self, member: discord.Member, channel, can_read: bool = True, can_send: bool = True):

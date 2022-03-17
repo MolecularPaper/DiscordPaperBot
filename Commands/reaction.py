@@ -39,7 +39,7 @@ async def send_edit(channel, msg, edit_msg, delay):
     await tk.edit(content=edit_msg)
 
 
-class Reaction(commands.Cog):
+class ReAction(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         read_reaction()
@@ -47,13 +47,14 @@ class Reaction(commands.Cog):
     @commands.command(name='배워')
     async def learn(self, ctx, word, *args):
         text = ' '.join(args)
-        if reactions.get(word) is None:
+        if ['명령어', '정보', '서버상태', '식사추천', '게임순위'].__contains__(word):
+            await ctx.send('그건 내 명령어다 애송이')
+            return
+        elif reactions.get(word) is None:
             reactions[word] = [text]
         elif text in reactions[word]:
             await ctx.send('이미 배웠습니다!')
             return
-        elif word in ['명령어', '정보', '서버상태', '식사추천', '게임순위']:
-            await ctx.send('그건 내 명령어다 애송이')
         else:
             reactions[word].append(text)
         await ctx.send(f'{word} - {text}, 확인했습니다.')
