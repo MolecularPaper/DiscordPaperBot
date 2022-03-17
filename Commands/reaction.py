@@ -5,7 +5,7 @@ from discord.ext import commands
 
 reactions = {}
 
-
+# 리액션 읽기
 def read_reaction():
     f = open('./Data/reaction.txt', 'r', encoding="UTF-8")
     lines = f.readlines()
