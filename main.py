@@ -5,15 +5,9 @@ from discord.ext import commands
 from Commands import info, todays_meal, discord_status, game_ranking, reaction
 from Song import song
 
-bot = commands.Bot(command_prefix='페이퍼 ')
+prefix = '페이퍼 '
 
-
-@bot.event
-async def on_ready():
-    await bot.change_presence(status=discord.Status.online, activity=None)
-    print("봇 이름", bot.user.name, "봇아이디: ", bot.user.id, "봇 버전: ", discord.__version__)
-    print("페이퍼봇 준비 완료!")
-
+bot = commands.Bot(command_prefix=prefix)
 
 # command
 bot.add_cog(info.Info(bot))
@@ -27,6 +21,28 @@ bot.add_cog(reaction.Reaction(bot))
 
 # Song
 bot.add_cog(song.Song(bot))
+
+
+# Event
+@bot.event
+async def on_ready():
+    await bot.change_presence(status=discord.Status.online, activity=None)
+    print("봇 이름", bot.user.name, "봇아이디: ", bot.user.id, "봇 버전: ", discord.__version__)
+    print("페이퍼봇 준비 완료!")
+
+
+@bot.event
+async def on_message(msg):
+    if msg.content.startswith(prefix):
+        if await reaction.send_msg(msg):
+            await bot.process_commands(msg)
+
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send("ㅇ?")
+
 
 if os.path.isfile('./Data/token.txt'):
     f = open('./Data/token.txt')
