@@ -52,7 +52,7 @@ class Reaction(commands.Cog):
         elif text in reactions[word]:
             await ctx.send('이미 배웠습니다!')
             return
-        elif text in ['명령어', '정보', '서버상태', '식사추천', '게임순위']:
+        elif word in ['명령어', '정보', '서버상태', '식사추천', '게임순위']:
             await ctx.send('그건 내 명령어다 애송이')
         else:
             reactions[word].append(text)
