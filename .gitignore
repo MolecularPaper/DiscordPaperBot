@@ -1,12 +1,9 @@
 #Token File
 Data/token.txt
-<<<<<<< Updated upstream
-Data/reaction.txt.txt
+Data/api_key.txt
 
 #Data/reaction.txt
-=======
 Data/reaction.txt
->>>>>>> Stashed changes
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
