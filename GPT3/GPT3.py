@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 import openai
-from Chat import api
+from GPT3 import api
 import re
 import os
 

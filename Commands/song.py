@@ -36,9 +36,9 @@ class Song(commands.Cog):
             # 봇이 음성채널에 연결되어있지 않다면 유저가 있는 채널에 연결함
             if not (voice_client and voice_client.is_connected()):
                 await voice.channel.connect()
-            with open('Options/ydl_opts.json', 'r') as f:
+            with open('Data/ydl_opts.json', 'r') as f:
                 ydl_opts = json.load(f)
-            with open('Options/ffmpeg_options.json', 'r') as f:
+            with open('Data/ffmpeg_options.json', 'r') as f:
                 ffmpeg_options = json.load(f)
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url, download=False)

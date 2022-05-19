@@ -1,7 +1,7 @@
 import discord
 import random
 import asyncio
-from Chat import GPT3
+from GPT3 import GPT3
 from discord.ext import commands
 
 reactions = {}
@@ -61,5 +61,5 @@ class ReAction(commands.Cog):
         else:
             reactions[word].append(text)
         await ctx.send(f'{word} - {text}, 확인했습니다.')
-        f = open('./Data/reaction.txt', 'a', encoding="UTF-8")
+        f = open('./GPT3/reaction.txt', 'a', encoding="UTF-8")
         f.write(f"{word} : {text}\n")

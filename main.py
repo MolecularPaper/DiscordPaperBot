@@ -2,8 +2,7 @@ import discord
 import os
 from discord.ext import commands
 
-from Commands import info, todays_meal, discord_status, game_ranking, reaction
-from Song import song
+from Commands import info, todays_meal, discord_status, game_ranking, reaction, song, calculation
 
 prefix = '페이퍼 '
 
@@ -15,6 +14,7 @@ bot.add_cog(game_ranking.Ranking(bot))
 bot.add_cog(todays_meal.Meal(bot))
 bot.add_cog(discord_status.Status(bot))
 bot.add_cog(reaction.ReAction(bot))
+bot.add_cog(calculation.Calculation(bot))
 
 # Game
 # bot.add_cog(mafia_game.Mafia(bot))
@@ -34,14 +34,12 @@ async def on_ready():
 @bot.event
 async def on_message(msg):
     if msg.content.startswith(prefix):
-        if await reaction.send_msg(msg):
-            await bot.process_commands(msg)
-
+        await bot.process_commands(msg)
 
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
-        await ctx.send("ㅇ?")
+        await reaction.send_msg(ctx)
 
 
 if os.path.isfile('./Data/token.txt'):
