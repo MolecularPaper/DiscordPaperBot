@@ -1,9 +1,11 @@
 import discord
 import random
 import asyncio
+from Chat import GPT3
 from discord.ext import commands
 
 reactions = {}
+
 
 # 리액션 읽기
 def read_reaction():
@@ -29,7 +31,8 @@ async def send_msg(ctx):
     elif msg in reactions:
         await ctx.channel.send(random.choice(reactions[msg]))
     else:
-        return True
+        gpt_out = GPT3.request(msg)
+        await ctx.channel.send(gpt_out)
     return False
 
 

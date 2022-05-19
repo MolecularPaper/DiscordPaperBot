@@ -1,4 +1,6 @@
 discord.py[voice]
+openai
+flask
 asyncio
 youtube_dl
 ffmpeg-python
