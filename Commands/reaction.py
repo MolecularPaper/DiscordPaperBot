@@ -1,8 +1,8 @@
 import discord
 import random
-import asyncio
 from GPT3 import GPT3
 from discord.ext import commands
+from Commands import utility
 
 reactions = {}
 
@@ -21,37 +21,17 @@ def read_reaction():
         else:
             reactions[split[0]].append(split[1])
 
-
-async def send_msg(ctx):
-    msg = ctx.content.replace("페이퍼 ", "")
-    if msg == '질긴종이':
-        await send_edit(ctx.channel, '개같은 주인놈...', '**위대하고 뛰어난 저의 창조주십니다!**', 0.3)
-    elif msg == '병신':
-        await send_edit(ctx.channel, '**지는ㅋ**', '뭐', 0.5)
-    elif msg in reactions:
-        await ctx.channel.send(random.choice(reactions[msg]))
-    else:
-        gpt_out = GPT3.request(msg)
-        await ctx.channel.send(gpt_out)
-    return False
-
-
-async def send_edit(channel, msg, edit_msg, delay):
-    tk = await channel.send(msg)
-    await asyncio.sleep(delay)
-    await tk.edit(content=edit_msg)
-
-
 class ReAction(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.use_gpt = False
         read_reaction()
 
     @commands.command(name='배워')
     async def learn(self, ctx, word, *args):
         text = ' '.join(args)
         if ['명령어', '정보', '서버상태', '식사추천', '게임순위'].__contains__(word):
-            await ctx.send('그건 내 명령어다 애송이')
+            await ctx.send('어림도 없지!')
             return
         elif reactions.get(word) is None:
             reactions[word] = [text]
@@ -61,5 +41,31 @@ class ReAction(commands.Cog):
         else:
             reactions[word].append(text)
         await ctx.send(f'{word} - {text}, 확인했습니다.')
-        f = open('./GPT3/reaction.txt', 'a', encoding="UTF-8")
+        f = open('./Data/reaction.txt', 'a', encoding="UTF-8")
         f.write(f"{word} : {text}\n")
+
+    async def send_msg(self, prefix, ctx):
+        msg = ctx.message.content.replace(prefix, "")
+        if msg == '질긴종이':
+            await utility.send_edit(ctx.channel, '개같은 주인놈...', '**위대하고 뛰어난 저의 창조주십니다!**', 0.3)
+        elif msg == '병신':
+            await utility.send_edit(ctx.channel, '**지는ㅋ**', '뭐', 0.5)
+        elif msg in reactions:
+            await ctx.channel.send(random.choice(reactions[msg]))
+        elif self.use_gpt:
+            gpt_out = GPT3.request(msg)
+            await ctx.channel.send(gpt_out)
+        else:
+            await ctx.send('ㅇ?')
+        return False
+    
+    @commands.command(name='GPT3')
+    async def gpt_togle(self, ctx, *arg):
+        
+        if len(arg) > 0:
+            if arg[0] == 'On':
+                self.use_gpt = True
+            elif arg[0] == 'Off':
+                self.use_gpt = False
+        
+        await ctx.send(f"GPT3 State: {'On' if self.use_gpt else 'Off'}")

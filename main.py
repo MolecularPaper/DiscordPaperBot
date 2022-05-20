@@ -7,13 +7,14 @@ from Commands import info, todays_meal, discord_status, game_ranking, reaction, 
 prefix = '페이퍼 '
 
 bot = commands.Bot(command_prefix=prefix)
+c_reaction = reaction.ReAction(bot)
 
 # command
 bot.add_cog(info.Info(bot))
 bot.add_cog(game_ranking.Ranking(bot))
 bot.add_cog(todays_meal.Meal(bot))
 bot.add_cog(discord_status.Status(bot))
-bot.add_cog(reaction.ReAction(bot))
+bot.add_cog(c_reaction)
 bot.add_cog(calculation.Calculation(bot))
 
 # Game
@@ -21,7 +22,6 @@ bot.add_cog(calculation.Calculation(bot))
 
 # Song
 bot.add_cog(song.Song(bot))
-
 
 # Event
 @bot.event
@@ -39,7 +39,7 @@ async def on_message(msg):
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
-        await reaction.send_msg(ctx)
+        await c_reaction.send_msg(prefix, ctx)
 
 
 if os.path.isfile('./Data/token.txt'):
