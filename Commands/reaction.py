@@ -46,7 +46,7 @@ class ReAction(commands.Cog):
 
     async def send_msg(self, prefix, ctx):
         msg = ctx.message.content.replace(prefix, "")
-        if msg == '질긴종이':
+        if msg == '팬텀워커':
             await utility.send_edit(ctx.channel, '개같은 주인놈...', '**위대하고 뛰어난 저의 창조주십니다!**', 0.3)
         elif msg == '병신':
             await utility.send_edit(ctx.channel, '**지는ㅋ**', '뭐', 0.5)
@@ -61,11 +61,10 @@ class ReAction(commands.Cog):
     
     @commands.command(name='GPT3')
     async def gpt_togle(self, ctx, *arg):
-        
         if len(arg) > 0:
-            if arg[0] == 'On':
+            if arg[0] == 'on':
                 self.use_gpt = True
-            elif arg[0] == 'Off':
+            elif arg[0] == 'off':
                 self.use_gpt = False
         
         await ctx.send(f"GPT3 State: {'On' if self.use_gpt else 'Off'}")
