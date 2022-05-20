@@ -38,6 +38,9 @@ class ReAction(commands.Cog):
         elif text in reactions[word]:
             await ctx.send('이미 배웠습니다!')
             return
+        elif len(args) == 0:
+            await ctx.send('반응할 문장을 입력해주세요!')
+            return
         else:
             reactions[word].append(text)
         await ctx.send(f'{word} - {text}, 확인했습니다.')
