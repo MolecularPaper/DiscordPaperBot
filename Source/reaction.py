@@ -54,19 +54,6 @@ class ReAction(commands.Cog):
             await utility.send_edit(ctx.channel, '**지는ㅋ**', '뭐', 0.5)
         elif msg in self.reactions:
             await ctx.channel.send(random.choice(self.reactions[msg]))
-        elif self.use_gpt:
-            gpt_out = kogpt.request(msg)
-            await ctx.channel.send(gpt_out)
         else:
             await ctx.send('ㅇ?')
         return False
-    
-    @commands.command(name='GPT3')
-    async def gpt_togle(self, ctx, *arg):
-        if len(arg) > 0:
-            if arg[0] == 'on':
-                self.use_gpt = True
-            elif arg[0] == 'off':
-                self.use_gpt = False
-        
-        await ctx.send(f"GPT3 State: {'On' if self.use_gpt else 'Off'}")
