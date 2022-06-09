@@ -1,6 +1,6 @@
 import random
 from discord.ext import commands
-from Source import utility, kogpt
+from Source import utility
 
 class ReAction(commands.Cog):
     def __init__(self, bot):
