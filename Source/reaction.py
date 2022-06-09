@@ -1,8 +1,6 @@
-import discord
 import random
-from GPT3 import GPT3
 from discord.ext import commands
-from Commands import utility
+from Source import utility, kogpt
 
 class ReAction(commands.Cog):
     def __init__(self, bot):
@@ -57,7 +55,7 @@ class ReAction(commands.Cog):
         elif msg in self.reactions:
             await ctx.channel.send(random.choice(self.reactions[msg]))
         elif self.use_gpt:
-            gpt_out = GPT3.request(msg)
+            gpt_out = kogpt.request(msg)
             await ctx.channel.send(gpt_out)
         else:
             await ctx.send('ㅇ?')

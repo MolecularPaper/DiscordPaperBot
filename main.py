@@ -2,7 +2,7 @@ import discord
 import os
 from discord.ext import commands
 
-from Commands import info, todays_meal, discord_status, game_ranking, reaction, song, calculation
+from Source import info, todays_meal, discord_status, game_ranking, reaction, song, calculation
 
 prefix = '페이퍼 '
 

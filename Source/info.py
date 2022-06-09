@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from Commands import utility
+from Source import utility
 
 class Info(commands.Cog):
     def __init__(self, bot):
