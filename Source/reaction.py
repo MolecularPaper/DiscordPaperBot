@@ -30,7 +30,7 @@ class ReAction(commands.Cog):
         if ['명령어', '정보', '서버상태', '식사추천', '게임순위'].__contains__(word):
             await ctx.send('어림도 없지!')
             return
-        if self.reactions[word].__contains__(text):
+        if self.reactions.get(word) != None and self.reactions[word].__contains__(text):
             await ctx.send('이미 배웠습니다!')
             return
         if text.isspace():
@@ -43,8 +43,8 @@ class ReAction(commands.Cog):
             self.reactions[word].append(text)
             
         await ctx.send(f'{word} - {text}, 확인했습니다.')
-        f = open('./Data/reaction.txt', 'a', encoding="UTF-8")
-        f.write(f"{word} : {text}\n")
+        with open('./Data/reaction.txt', 'a', encoding="UTF-8") as f:
+            f.write(f"{word} : {text}\n")
 
     async def send_msg(self, prefix, ctx):
         msg = ctx.message.content.replace(prefix, "")
