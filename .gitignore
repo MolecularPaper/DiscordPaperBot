@@ -1,8 +1,5 @@
-#Token File
+#Data
 Data/token.txt
-Data/api_key.txt
-
-#Data/reaction.txt
 Data/reaction.txt
 
 # Byte-compiled / optimized / DLL files
