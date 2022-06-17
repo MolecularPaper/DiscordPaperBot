@@ -2,7 +2,6 @@ from ast import parse
 from cmath import e
 from tabnanny import check
 from unicodedata import digit
-from cv2 import add, transform
 from discord.ext import commands
 
 class Calculation(commands.Cog):
