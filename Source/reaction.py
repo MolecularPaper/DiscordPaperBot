@@ -1,6 +1,8 @@
-import random
+import random, os
 from discord.ext import commands
 from Source import utility
+
+reaction_file_path = './Data/reaction.txt'
 
 class ReAction(commands.Cog):
     def __init__(self, bot):
@@ -10,10 +12,14 @@ class ReAction(commands.Cog):
 
     # 리액션 읽기
     def read_reaction(self):
-        f = open('./Data/reaction.txt', 'r', encoding="UTF-8")
-        lines = f.readlines()
         reactions = {}
+        
+        if not os.path.isfile(reaction_file_path):
+            return reactions
 
+        f = open(reaction_file_path, 'r', encoding="UTF-8")
+        lines = f.readlines()
+        
         for line in lines:
             if not line:
                 continue
@@ -43,7 +49,8 @@ class ReAction(commands.Cog):
             self.reactions[word].append(text)
             
         await ctx.send(f'{word} - {text}, 확인했습니다.')
-        with open('./Data/reaction.txt', 'a', encoding="UTF-8") as f:
+
+        with open(reaction_file_path, 'a', encoding="UTF-8") as f:
             f.write(f"{word} : {text}\n")
 
     async def send_msg(self, prefix, ctx):
