@@ -1,13 +1,15 @@
 import discord, youtube_dl, json, time
+from matplotlib.pyplot import title
 from discord.ext import commands
-
+import asyncio
 
 class Song(commands.Cog):
     def __init__(self, bot):
-        bot.remove_command("help")
         self.bot = bot
+        self.song_list = []
+        self.index = 0
 
-    @commands.command(name='join')
+    @commands.command(name='연결')
     async def join(self, ctx):
         voice = ctx.message.author.voice
         voice_client = ctx.guild.voice_client
@@ -27,7 +29,7 @@ class Song(commands.Cog):
         else:
             await ctx.send('먼저 음성채널에 연결해주세요')
 
-    @commands.command(name='play')
+    @commands.command(name='재생')
     async def play(self, ctx, url: str):
         voice = ctx.message.author.voice
         voice_client = ctx.guild.voice_client
@@ -36,16 +38,47 @@ class Song(commands.Cog):
             # 봇이 음성채널에 연결되어있지 않다면 유저가 있는 채널에 연결함
             if not (voice_client and voice_client.is_connected()):
                 await voice.channel.connect()
-            with open('Data/ydl_opts.json', 'r') as f:
-                ydl_opts = json.load(f)
-            with open('Data/ffmpeg_options.json', 'r') as f:
-                ffmpeg_options = json.load(f)
-            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(url, download=False)
-                URL = info['formats'][0]['url']
-            self.bot.voice_clients[0].play(discord.FFmpegPCMAudio(URL, **ffmpeg_options, executable='ffmpeg/bin/ffmpeg.exe'))
 
-    @commands.command(name='leave')
+        # 유튜브 다운로더 옵션 로딩
+        with open('Data/ydl_opts.json', 'r') as f:
+                ydl_opts = json.load(f)
+        
+        # URL 등록
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(url, download=False)
+            URL = info['formats'][0]['url']
+            title = info['title']
+            length = info['duration']
+
+            self.song_list.append((URL, title, length))
+            await ctx.send(f'재생목록에 추가됨: {title}')
+        
+        # 이미 재생 중이라면 리턴
+        if self.bot.voice_clients[0].is_playing():
+            return
+        
+        await self.play_song(ctx)
+    
+    # 음악 재생
+    async def play_song(self, ctx):
+        #ffmpeg 옵션 로딩
+        with open('Data/ffmpeg_options.json', 'r') as f:
+            ffmpeg_options = json.load(f)
+        
+        await ctx.send(f'지금 재생중: {self.index}. {self.song_list[self.index][1]}')
+        source = discord.FFmpegPCMAudio(self.song_list[self.index][0], **ffmpeg_options, executable='ffmpeg/bin/ffmpeg.exe')
+        after = lambda e: self.next_song(ctx)
+        self.bot.voice_clients[0].play(source, after=after)
+
+    # 다음곡 재생
+    async def next_song(self, ctx):
+        self.index += 1
+        if len(self.song_list) >= self.index:
+            self.index = 0
+            return
+        asyncio.run_coroutine_threadsafe(self.play_song(ctx), self.bot.loop)
+
+    @commands.command(name='연결해제')
     async def leave(self, ctx):
         voice_client = ctx.guild.voice_client
         # 봇이 음성채널에 연결되어있는지 확인
@@ -53,3 +86,10 @@ class Song(commands.Cog):
             await voice_client.disconnect()
         else:
             await ctx.send('음성채널에 연결되어있지 않습니다')
+
+    @commands.command(name='재생목록')
+    async def play_list(self, ctx):
+        list = ""
+        for i, song in enumerate(self.song_list):
+            list += f'{i + 1}. {song[1]} [{song[2]}]\n'
+        await ctx.send(list)
