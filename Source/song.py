@@ -7,8 +7,7 @@ class Song(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.song_list = []
-        self.index = 0
-
+    
     @commands.command(name='연결')
     async def join(self, ctx):
         voice = ctx.message.author.voice
@@ -53,10 +52,6 @@ class Song(commands.Cog):
             self.song_list.append((URL, title, length))
             await ctx.send(f'재생목록에 추가됨: {title}')
         
-        # 이미 재생 중이라면 리턴
-        if self.bot.voice_clients[0].is_playing():
-            return
-        
         await self.play_song(ctx)
     
     # 음악 재생
@@ -65,16 +60,18 @@ class Song(commands.Cog):
         with open('Data/ffmpeg_options.json', 'r') as f:
             ffmpeg_options = json.load(f)
         
-        await ctx.send(f'지금 재생중: {self.index}. {self.song_list[self.index][1]}')
-        source = discord.FFmpegPCMAudio(self.song_list[self.index][0], **ffmpeg_options, executable='ffmpeg/bin/ffmpeg.exe')
-        after = lambda e: self.next_song(ctx)
-        self.bot.voice_clients[0].play(source, after=after)
-
+        # 이미 재생 중이라면 리턴
+        if self.bot.voice_clients[0].is_playing():
+            return
+        
+        await ctx.send(f'지금 재생중: {self.song_list[0][1]}')
+        source = discord.FFmpegPCMAudio(self.song_list[0][0], **ffmpeg_options, executable='ffmpeg/bin/ffmpeg.exe')
+        self.bot.voice_clients[0].play(source, after=lambda e: self.next_song(ctx))
+    
     # 다음곡 재생
-    async def next_song(self, ctx):
-        self.index += 1
-        if len(self.song_list) >= self.index:
-            self.index = 0
+    def next_song(self, ctx):
+        self.song_list.pop()
+        if len(self.song_list) == 0:
             return
         asyncio.run_coroutine_threadsafe(self.play_song(ctx), self.bot.loop)
 
@@ -91,5 +88,9 @@ class Song(commands.Cog):
     async def play_list(self, ctx):
         list = ""
         for i, song in enumerate(self.song_list):
-            list += f'{i + 1}. {song[1]} [{song[2]}]\n'
+            time = song[2]
+            hour = int(time / 3600) # 시 공식
+            minute = int(time % 3600 / 60); # 분을 구하기위해서 입력되고 남은값에서 또 60을 나눈다.
+            second = int(time % 3600 % 60); # 마지막 남은 시간에서 분을 뺀 나머지 시간을 초로 계산함
+            list += f'{i + 1}. {song[1]} [{hour}:{minute}:{second}]\n'
         await ctx.send(list)
