@@ -1,5 +1,4 @@
 import discord, youtube_dl, json, time
-from matplotlib.pyplot import title
 from discord.ext import commands
 import asyncio
 
