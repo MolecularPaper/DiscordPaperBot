@@ -1,49 +1,37 @@
 {
-    "system":{
-        "match_making":{
-            "start":"게임에 참여할려면 {match_making_channel} 채널에 참가해주세요. \n게임을 하기 위해서는 최소 {min_player_count}명 이상의 인원이 필요합니다. \n게임은 {match_time}초 후에 시작되며, 이후 진행 상황은 {global_channel}에 나타납니다.",
-            "stop":"매치를 중단하고 게임을 종료합니다."
-        },
-        "game":{
-            "start":"게임을 시작합니다.",
-            "stop":"게임을 중단합니다.",
-            "set_role":"역할을 지정합니다. 개인 메세지를 확인해주세요.",
-            "notification_role": "당신의 역할은 {role} 입니다.",
-            "changed_morning":"낮이 되었습니다.",
-            "changed_night":"밤이 되었습니다. 플레이어는 자신의 역할 채널로 이동하여 주세요.",
-            "night_event_none":"아무일도 일어나지 않았습니다...",
-            "night_event_killed":"{kill_member}가 사망하였습니다.",
-            "night_event_revive":"{kill_member}가 마피아에게 공격받았지만, 의사에 의하여 치료되었습니다.",
-            "start_debate":"토론을 시작합니다. ({debate_time})",
-            "final_hearing":"최후의 반론을 진행합니다. ({final_hearing_time}"
-        },
-        "vote":{
-            "execution":"처형 투표를 시작합니다({vote_time}).",
-            "execution_config":"찬반투표를 진행합니다(execution_config_time).",
-            "mafia":"사살할 유저를 투표해주세요.({vote_time}).",
-            "police":"치료할 유저를 투표해주세요.({vote_time}).",
-            "doctor":"조사할 유저를 투표해주세요.({vote_time}).",
-            "none":"투표자가 없습니다. 투표를 넘깁니다."
-        },
-        "error":{
-            "game_already_starte":"이미 게임이 진행중입니다.",
-            "shortage_of_players":"게임을 진행할 플레이어가 부족합니다.",
-            "already_dead_user":"이미 죽은 유저입니다.",
-            "none_user":"게임에 참여하지 않은 유저입니다."
-        },
-        "result":{
-            "win_citizen":"마피아가 모두 처형되고, 평화가 찾아왔습니다! [시민 승리]",
-            "win_mafia":"정의로운 시민들은 모두 사살되었습니다. 이제 이 도시는 마피아가 지배합니다. [마피아 승리]"
-        }
+    "match_making":{
+        "start":"게임에 참여할려면 [{match_making_channel}] 채널에 참가해주세요. \n게임을 하기 위해서는 최소 {min_player_count}명 이상의 인원이 필요합니다. \n게임은 {match_making_time}초 후에 시작되며, 이후 진행 상황은 {global_channel}에 나타납니다.",
+        "stop":"매치를 중단하고 게임을 종료합니다."
     },
-    "channel_name":{
-        "category":"마피아게임",
-        "match_making":"마피아-대기",
-        "voice":"마피아-음성채팅",
-        "global":"마피아-공용채팅",
-        "mafia":"마피아-마피아채팅",
-        "police":"마피아-경찰채팅",
-        "doctor":"마피아-의사채팅"
+    "game":{
+        "start":"게임을 시작합니다.",
+        "stop":"게임을 종료합니다.",
+        "set_role":"역할을 지정합니다. 개인 메세지를 확인해주세요.",
+        "notification_role": "당신의 역할은 {role} 입니다.",
+        "changed_morning":"낮이 되었습니다.",
+        "changed_night":"밤이 되었습니다. 플레이어는 자신의 역할 채널로 이동하여 주세요.",
+        "night_event_none":"아무일도 일어나지 않았습니다...",
+        "night_event_killed":"{kill_member}가 사망하였습니다.",
+        "night_event_revive":"{kill_member}가 마피아에게 공격받았지만, 의사에 의하여 치료되었습니다.",
+        "start_debate":"토론을 시작합니다. ({debate_time})",
+        "final_hearing":"최후의 반론을 진행합니다. ({final_hearing_time}"
+    },
+    "vote":{
+        "execution":"처형 투표를 시작합니다({vote_time}).",
+        "execution_config":"찬반투표를 진행합니다(execution_config_time).",
+        "mafia":"사살할 유저를 투표해주세요.({vote_time}).",
+        "police":"치료할 유저를 투표해주세요.({vote_time}).",
+        "doctor":"조사할 유저를 투표해주세요.({vote_time}).",
+        "none":"투표자가 없습니다. 투표를 넘깁니다."
+    },
+    "error":{
+        "shortage_of_players":"게임을 진행할 플레이어가 부족합니다.",
+        "game_already_starte":"이미 게임이 진행중입니다.",
+        "already_dead_user":"이미 죽은 유저입니다.",
+        "none_user":"게임에 참여하지 않은 유저입니다."
+    },
+    "result":{
+        "win_citizen":"마피아가 모두 처형되고, 평화가 찾아왔습니다! [시민 승리]",
+        "win_mafia":"정의로운 시민들은 모두 사살되었습니다. 이제 이 도시는 마피아가 지배합니다. [마피아 승리]"
     }
-    
 }

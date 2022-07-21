@@ -1,10 +1,4 @@
 {
-    "prefix":"마피아",
-    "min_player_count":4,
-    "match_making_time":30,
-    "vote_time" : 25,
-    "final_hearing_time":15,
-    "execution_config_time":10,
     "category":"마피아게임",
     "match_making_channel":"마피아-대기",
     "voice_channel":"마피아-음성채팅",
