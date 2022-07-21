@@ -6,6 +6,7 @@ config_path = './Data/Mafia/mafia_game_config.json'
 text_path = './Data/Mafia/mafia_game_text.json'
 channel_path = './Data/Mafia/mafia_game_channel.json'
 trigger_path = './Data/Mafia/mafia_game_val.json'
+prefix = '마피아'
 
 class Mafia(commands.Cog):
     def __init__(self, bot) -> None:
@@ -15,7 +16,7 @@ class Mafia(commands.Cog):
         self.channels = self.ReadJson(channel_path) #게임 채널 설정
         self.game_value = self.ReadJson(trigger_path) #게임 내부 트리거 설정
     
-    @commands.command(name=self.config['prefix'] + '_매치생성')
+    @commands.command(name=prefix + '_매치생성')
     async def Match(self, ctx):
         await self.CreateChannel(ctx)
         await self.SendText(ctx, self.ConvertText(self.systext['match_making']['start']))
