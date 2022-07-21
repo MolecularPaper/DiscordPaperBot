@@ -1,0 +1,8 @@
+{
+    "prefix":"마피아",
+    "min_player_count":4,
+    "match_making_time":30,
+    "vote_time" : 25,
+    "final_hearing_time":15,
+    "execution_config_time":10
+}
