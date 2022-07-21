@@ -1,9 +1,30 @@
 {
-    "category":"마피아게임",
-    "match_making_channel":"마피아-대기",
-    "voice_channel":"마피아-음성채팅",
-    "global_channel":"마피아-공용채팅",
-    "mafia_channel":"마피아-마피아채팅",
-    "police_channel":"마피아-경찰채팅",
-    "doctor_channel":"마피아-의사채팅"
+    "category":{
+        "name":"마피아게임",
+        "type":"category"
+    },
+    "voice_channel":{
+        "name":"마피아-음성채팅",
+        "type":"voice"
+    },
+    "match_making_channel":{
+        "name":"마피아-대기",
+        "type":"text"
+    },
+    "global_channel":{
+        "name":"마피아-공용채팅",
+        "type":"text"
+    },
+    "mafia_channel":{
+        "name":"마피아-마피아채팅",
+        "type":"text"
+    },
+    "police_channel":{
+        "name":"마피아-경찰채팅",
+        "type":"text"
+    },
+    "doctor_channel":{
+        "name":"마피아-의사채팅",
+        "type":"text"
+    }
 }

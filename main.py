@@ -2,7 +2,7 @@ import discord
 import os
 from discord.ext import commands
 
-from Source import info, todays_meal, discord_status, game_ranking, reaction, song, calculation, rock_scissors_paper
+from Source import info, todays_meal, discord_status, game_ranking, reaction, song, calculation, rock_scissors_paper, mafia_game
 
 prefix = '페이퍼 '
 
@@ -18,7 +18,7 @@ bot.add_cog(c_reaction)
 bot.add_cog(calculation.Calculation(bot))
 
 # Game
-# bot.add_cog(mafia_game.Mafia(bot))
+bot.add_cog(mafia_game.Mafia(bot))
 bot.add_cog(rock_scissors_paper.RockScissorsPaper(bot))
 
 # Song

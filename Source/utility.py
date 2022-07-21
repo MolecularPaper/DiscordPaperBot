@@ -11,12 +11,13 @@ def read_file(filename):
         return file_text
 
 async def send_edit(channel, msg, edit_msg, delay):
+    '''메세지 전송후 dleay시간 만큼 대기후 edit_msg로 수정'''
     tk = await channel.send(msg)
     await asyncio.sleep(delay)
     await tk.edit(content=edit_msg)
 
-# 채널 생성
-async def create_channel(ctx, bot, name: str, _type: discord.ChannelType, category: discord.CategoryChannel = None, can_read: bool = True, can_send=True, print_log=True):
+async def create_channel(ctx, bot, name: str, _type: str, category: discord.CategoryChannel = None, can_read: bool = True, can_send=True, print_log=True):
+    '''채널 생성 (채널이 있는경우, 그 채널 반환)'''
     overwrites = {
         ctx.guild.default_role: discord.PermissionOverwrite(read_messages=can_read, send_messages=can_send),
         bot.user: discord.PermissionOverwrite(read_messages=True, send_messages=True)
@@ -25,11 +26,15 @@ async def create_channel(ctx, bot, name: str, _type: discord.ChannelType, catego
     if print_log:
         print(f'[INFO] {category}에 속한 {name} {_type}채널이 [읽기: {can_read}  쓰기: {can_send}] 권한으로 생성됨')
 
-    if _type == discord.ChannelType.text:
+    for channel in ctx.guild.channels:
+        if channel.name == name:
+            return channel
+    
+    if _type == "text":
         return await ctx.guild.create_text_channel(name, category=category, overwrites=overwrites)
-    elif _type == discord.ChannelType.voice:
+    elif _type == "voice":
         return await ctx.guild.create_voice_channel(name, category=category, overwrites=overwrites)
-    elif _type == discord.ChannelType.category:
+    elif _type == "category":
         return await ctx.guild.create_category(name)
     
 
