@@ -4,12 +4,5 @@
     "match_making_time":30,
     "vote_time" : 25,
     "final_hearing_time":15,
-    "execution_config_time":10,
-    "category":"마피아게임",
-    "match_making_channel":"마피아-대기",
-    "voice_channel":"마피아-음성채팅",
-    "global_channel":"마피아-공용채팅",
-    "mafia_channel":"마피아-마피아채팅",
-    "police_channel":"마피아-경찰채팅",
-    "doctor_channel":"마피아-의사채팅"
+    "execution_config_time":10
 }

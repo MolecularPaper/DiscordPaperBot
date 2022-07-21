@@ -1,6 +1,6 @@
 {
     "match_making":{
-        "start":"게임에 참여할려면 [{match_making_channel}] 채널에 참가해주세요. \n게임을 하기 위해서는 최소 {min_player_count}명 이상의 인원이 필요합니다. \n게임은 {match_making_time}초 후에 시작되며, 이후 진행 상황은 {global_channel}에 나타납니다.",
+        "start":"게임에 참여할려면 [{match_making_channel}] 채널에 참가해주세요. \n게임을 하기 위해서는 최소 {min_player_count}명 이상의 인원이 필요합니다. \n 이후 진행 상황은 {global_channel}에 나타납니다.",
         "stop":"매치를 중단하고 게임을 종료합니다."
     },
     "game":{
