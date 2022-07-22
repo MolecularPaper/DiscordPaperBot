@@ -9,7 +9,7 @@
     },
     "match_making_channel":{
         "name":"마피아-대기",
-        "type":"text"
+        "type":"voice"
     },
     "global_channel":{
         "name":"마피아-공용채팅",

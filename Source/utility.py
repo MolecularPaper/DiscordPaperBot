@@ -71,3 +71,8 @@ async def connect_user_voice(member: discord.Member, channel: discord.VoiceChann
     if member.voice is not None:
         await member.move_to(channel)
         print(f'[INFO] {member.name}을 {channel.name}으로 이동시킴')
+
+async def connect_all_user_voice(members, channel: discord.VoiceChannel):
+    '''유저 음성채널 이동'''
+    for member in members:
+        await connect_user_voice(member, channel)
