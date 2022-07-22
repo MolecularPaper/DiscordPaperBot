@@ -1,7 +1,6 @@
 from asyncio import tasks
 import discord, asyncio, json
 from discord.ext import commands
-from sqlalchemy import true
 from Source import utility
 
 config_path = './Data/Mafia/mafia_game_config.json'
