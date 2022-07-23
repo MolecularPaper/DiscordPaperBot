@@ -18,7 +18,7 @@ bot.add_cog(c_reaction)
 bot.add_cog(calculation.Calculation(bot))
 
 # Game
-bot.add_cog(mafia_game.Mafia(bot))
+# bot.add_cog(mafia_game.Mafia(bot))
 bot.add_cog(rock_scissors_paper.RockScissorsPaper(bot))
 
 # Song

@@ -38,7 +38,7 @@ async def create_channel(ctx, bot, name: str, _type: str, category: discord.Cate
         return await ctx.guild.create_category(name)
     
 
-async def set_channel_permissions(member: discord.Member, channel, can_read: bool = True, can_send: bool = True, print_log=True):
+async def set_user_permissions(member: discord.Member, channel, can_read: bool = True, can_send: bool = True, print_log=True):
     '''채널 권한 설정'''
     perms = channel.overwrites_for(member)
     perms.read_messages = can_read
@@ -47,6 +47,9 @@ async def set_channel_permissions(member: discord.Member, channel, can_read: boo
     
     if print_log:
         print(f'[INFO] {channel.name} 채널의 {member}의 권한이 [읽기: {can_read}  쓰기: {can_send}] 으로 변경됨')
+
+async def set_channel_permission(ctx, channel, can_read:bool, can_send:bool):
+    set_user_permissions(ctx.guild.default_role, channel, can_read, can_send)
 
 async def dm_channel(member: discord.Member):
     '''DM 채널 반환 (없을경우 생성함)'''

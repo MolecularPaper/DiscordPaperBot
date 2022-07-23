@@ -18,10 +18,12 @@ class Player():
         self.is_dead = False
         return
 
-    async def ChangeVoiceChannel(self, channel:discord.VoiceChannel):
-        if self.member.voice is not None:
-            await self.member.move_to(channel)
-            print(f'[INFO] {self.member.name}을 {channel.name}으로 이동시킴')
+    def SetRole(self, role:str):
+        self.role = role
+    
+    def Kill(self):
+        self.is_dead = true
+    
 
 class Mafia(commands.Cog):
     def __init__(self, bot) -> None:
@@ -56,8 +58,10 @@ class Mafia(commands.Cog):
         # 이미 매치가 진행중인지 확인
         if self.game_value['is_match']:
             await self.SendText(ctx, self.systext['error']['match_already_start'])
+            return
         
         await self.CreateChannel(ctx)
+        await utility.set_channel_permission(ctx, self.channels['match_making_channel'], True, True)
         await self.SendText(ctx, self.ConvertText(self.systext['match_making']['start']))
         self.game_value['is_match'] = True
     
@@ -88,7 +92,8 @@ class Mafia(commands.Cog):
             return
         
         # 매치중인 유저수 확인
-        members = self.channels['match_making_channel']['channel'].members
+        match_channel = self.channels['match_making_channel']['channel']
+        members = match_channel.members
         if len(members) < self.config['min_player_count']:
             await self.SendText(ctx, self.systext['error']['shortage_of_players'])
             return
@@ -97,7 +102,9 @@ class Mafia(commands.Cog):
         
         # 매칭중인 유저 게임 보이스 채널로 이동
         voice_channel = self.channels['voice_channel']['channel']
-        await utility.connect_all_user_voice(members, voice_channel)
+        for member in members:
+            await utility.connect_user_voice(members, voice_channel)
+            await utility.set_user_permissions(member, match_channel , False)        
     
     # 진행중인 게임을 종료함
     @commands.command(name=prefix + '_게임종료')
@@ -121,8 +128,8 @@ class Mafia(commands.Cog):
     async def CreateChannel(self, ctx):
         for key, value in self.channels.items():
             category = self.channels.get('category').get('channel')
-            self.channels[key]['channel'] = await utility.create_channel(ctx, self.bot, value['name'], value['type'], category)
-
+            self.channels[key]['channel'] = await utility.create_channel(ctx, self.bot, value['name'], value['type'], category, True, False)
+        
     # 채널에 매세지 전송
     async def SendText(self, channel, text:str):
         await channel.send(text)
